@@ -53,6 +53,12 @@
 - The server and the client can push multiple messages as part of one request.
 - In gRPC it's very easy to define these APIs.
 
+### What is an Unary API?
+- Unary RPC calls are the basic Response / Reques.
+- The client sends one message to the server and recieves one response from the server.
+- Unary calls are very well suited for small data.
+- Start with Unary when writing APIs and use streaming API if performance is an issue.
+
 ### Scalability in gRPC
 - gRPC Servers are asynchronous by default. This means they do not block threads on request. Therefore each gRPC server can serve millions of requests in parallel.
 - gRPC Clients can be asynchronous or synchronous (blocking). The client decides which model works best for the performance needs.
