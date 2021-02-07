@@ -39,7 +39,7 @@ func (s *server) GreetManyTimes(req *greetpb.GreetManyRequest, stream greetpb.Gr
 }
 
 func main() {
-	fmt.Println("Hello, I'm a server!")
+	fmt.Println("Hello, I'm the server!")
 
 	lis, err := net.Listen("tcp", "0.0.0.0:50051")
 	if err != nil {

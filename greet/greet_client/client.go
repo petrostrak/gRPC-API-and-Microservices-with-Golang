@@ -11,7 +11,7 @@ import (
 )
 
 func main() {
-	fmt.Println("Hello, I'm a client!")
+	fmt.Println("Hello, I'm the client!")
 
 	cc, err := grpc.Dial("localhost:50051", grpc.WithInsecure())
 	if err != nil {
