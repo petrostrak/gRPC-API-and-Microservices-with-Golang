@@ -59,6 +59,15 @@
 - Unary calls are very well suited for small data.
 - Start with Unary when writing APIs and use streaming API if performance is an issue.
 
+### What is a Server Streaming API?
+- Server Streaming RPC API is a new kind of API enabled thanks to HTTP 2.
+- The client will send one message to the serverm and will receive many responses from the server.
+- Streaming Servers are well suited
+   * When the server needs to send a lot of data (big data).
+   * When the server needs to `PUSH` data to the client continuously without having the client request all over again.
+- In gPRC, Server Streaming Calls are defined using the keyword `stream`.
+- As for each RPC call, we have to define a Request message and a Response message as in Unary calls.
+
 ### Scalability in gRPC
 - gRPC Servers are asynchronous by default. This means they do not block threads on request. Therefore each gRPC server can serve millions of requests in parallel.
 - gRPC Clients can be asynchronous or synchronous (blocking). The client decides which model works best for the performance needs.
