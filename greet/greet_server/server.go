@@ -22,6 +22,11 @@ func (s *server) Greet(ctx context.Context, req *greetpb.GreetRequest) (*greetpb
 	return res, nil
 }
 
+func (s *server) GreetManyTimes(req *greetpb.GreetManyRequest, stream greetpb.GreetService_GreetManyTimesServer) error {
+	// TODO: implement GreetManyTimes
+	return nil
+}
+
 func main() {
 	fmt.Println("Hello, I'm a server!")
 
