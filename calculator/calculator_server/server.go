@@ -13,7 +13,7 @@ import (
 type server struct{}
 
 func (s *server) Calculation(ctx context.Context, req *calculatorpb.CalculationRequest) (*calculatorpb.CalculationResponse, error) {
-	fmt.Printf("Calculator server request was invoked with %v", req)
+	fmt.Printf("Calculator server request was invoked with %v\n", req)
 	a := req.Calculation.GetA()
 	b := req.Calculation.GetB()
 	result := a + b
