@@ -1,0 +1,22 @@
+syntax = "proto3";
+
+package calculator;
+option go_package = "calculatorpb";
+
+message Calculation {
+    int32 a = 1;
+    int32 b = 2;
+}
+
+message CalculationRequest {
+    Calculation calculation = 1;
+}
+
+message CalculationResponse {
+    int32 result = 1;
+}
+
+service CalculationService {
+    // Unary call
+    rpc Calculation (CalculationRequest) returns (CalculationResponse) {};
+}
