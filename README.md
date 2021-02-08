@@ -61,11 +61,21 @@
 
 ### What is a Server Streaming API?
 - Server Streaming RPC API is a new kind of API enabled thanks to HTTP 2.
-- The client will send one message to the serverm and will receive many responses from the server.
+- The client will send one message to the server and will receive many responses from the server.
 - Streaming Servers are well suited
    * When the server needs to send a lot of data (big data).
    * When the server needs to `PUSH` data to the client continuously without having the client request all over again.
 - In gPRC, Server Streaming Calls are defined using the keyword `stream`.
+- As for each RPC call, we have to define a Request message and a Response message as in Unary calls.
+
+### What is a Client Streaming API?
+- Server Streaming RPC API is a new kind of API enabled thanks to HTTP 2.
+- The client will send many messages to the server and will receive one response from the server.
+- Streaming Client are well suited
+   * When the client needs to send a lot of data (big data).
+   * When the server processing is expensive and should happen as the client sends data.
+   * When the client needs to `PUSH` data to the server without really expecting a response.
+- In gPRC, Client Streaming Calls are defined using the keyword `stream`.
 - As for each RPC call, we have to define a Request message and a Response message as in Unary calls.
 
 ### Scalability in gRPC
