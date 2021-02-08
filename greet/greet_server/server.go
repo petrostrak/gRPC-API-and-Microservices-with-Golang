@@ -38,6 +38,11 @@ func (s *server) GreetManyTimes(req *greetpb.GreetManyRequest, stream greetpb.Gr
 	return nil
 }
 
+func (s *server) LongGreet(gs greetpb.GreetService_LongGreetServer) error {
+	// TODO: implement LongGreet func
+	return nil
+}
+
 func main() {
 	fmt.Println("Hello, I'm the server!")
 
