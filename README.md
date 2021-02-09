@@ -66,7 +66,7 @@
    * When the server needs to send a lot of data (big data).
    * When the server needs to `PUSH` data to the client continuously without having the client request all over again.
 - In gPRC, Server Streaming Calls are defined using the keyword `stream`.
-- As for each RPC call, we have to define a Request message and a Response message as in Unary calls.
+- As for each RPC call, we have to define a Request message and a Response message..
 
 ### What is a Client Streaming API?
 - Server Streaming RPC API is a new kind of API enabled thanks to HTTP 2.
@@ -76,7 +76,18 @@
    * When the server processing is expensive and should happen as the client sends data.
    * When the client needs to `PUSH` data to the server without really expecting a response.
 - In gPRC, Client Streaming Calls are defined using the keyword `stream`.
-- As for each RPC call, we have to define a Request message and a Response message as in Unary calls.
+- As for each RPC call, we have to define a Request message and a Response message.
+
+### What is a Bi Directional Streaming API?
+- Bi Directional Streaming RPC API is a new kind of API enabled thanks to HTTP 2.
+- The client will send many messages to the server and will receive many responses from the server.
+- The number of requests and responses does not have to much.
+- Bi Directional Streaming RPC is well suited
+   * When the client and the server needs to send a lot of data asynchronously.
+   * `Chat` protocol.
+   * Long running connections.
+- In gPRC, Bi Directional Streaming API Calls are defined using the keyword `stream`, twice.
+- As for each RPC call, we have to define a Request message and a Response message.
 
 ### Scalability in gRPC
 - gRPC Servers are asynchronous by default. This means they do not block threads on request. Therefore each gRPC server can serve millions of requests in parallel.
