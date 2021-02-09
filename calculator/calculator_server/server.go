@@ -13,6 +13,11 @@ import (
 
 type server struct{}
 
+func (s *server) FindMaximum(stream calculatorpb.CalculationService_FindMaximumServer) error {
+	// TODO: Impl FindMaximum func
+	return nil
+}
+
 func (s *server) ComputeAverage(stream calculatorpb.CalculationService_ComputeAverageServer) error {
 	fmt.Println("Compute Average request was invoked")
 	var result float64
