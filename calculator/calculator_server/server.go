@@ -12,6 +12,11 @@ import (
 
 type server struct{}
 
+func (s *server) ComputeAverage(stream calculatorpb.CalculationService_ComputeAverageServer) error {
+	// TODO: implement ComputeAverage func
+	return nil
+}
+
 func (s *server) PrimeNumberDecomposition(req *calculatorpb.PrimeNumberDecompositionRequest, stream calculatorpb.CalculationService_PrimeNumberDecompositionServer) error {
 	fmt.Printf("Prime Number Decomposition request was invoked with %v\n", req)
 	number := req.Calculation.GetA()
