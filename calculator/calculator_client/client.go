@@ -24,7 +24,51 @@ func main() {
 
 	// doUnary(c)
 	// doServerStreaming(c)
-	doClientStreaming(c)
+	// doClientStreaming(c)
+	doBiDiStreaming(c)
+}
+
+func doBiDiStreaming(c calculatorpb.CalculationServiceClient) {
+	fmt.Println("Starting Bidi Client Streaming RPC...")
+	stream, err := c.FindMaximum(context.Background())
+	if err != nil {
+		log.Fatalf("error while creating stream: %v", err)
+		return
+	}
+
+	reqs := []int32{7, 4, -2, 9, 18, 6}
+
+	waitChan := make(chan struct{})
+
+	go func() {
+		for _, req := range reqs {
+			fmt.Printf("Sending message: %v\n", req)
+			if err := stream.Send(&calculatorpb.FindMaximumRequest{
+				Integer: req,
+			}); err != nil {
+				log.Fatalf("error while sending message: %v", err)
+				return
+			}
+			time.Sleep(time.Second)
+		}
+		stream.CloseSend()
+	}()
+
+	go func() {
+		for {
+			resp, err := stream.Recv()
+			if err == io.EOF {
+				break
+			}
+			if err != nil {
+				log.Fatalf("error while receiving: %v", err)
+				break
+			}
+			fmt.Printf("Received: %v\n", resp.GetMax())
+		}
+		close(waitChan)
+	}()
+	<-waitChan
 }
 
 func doClientStreaming(c calculatorpb.CalculationServiceClient) {

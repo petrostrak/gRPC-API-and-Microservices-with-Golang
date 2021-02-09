@@ -14,8 +14,28 @@ import (
 type server struct{}
 
 func (s *server) FindMaximum(stream calculatorpb.CalculationService_FindMaximumServer) error {
-	// TODO: Impl FindMaximum func
-	return nil
+	fmt.Println("FindMaximum server request was invoked with a streaming request")
+	var max int32 = 0
+	for {
+		req, err := stream.Recv()
+		if err == io.EOF {
+			return nil
+		}
+		if err != nil {
+			log.Fatalf("error while reading client stream: %v", err)
+			return err
+		}
+		integer := req.GetInteger()
+		if integer > max {
+			max = integer
+			if err = stream.Send(&calculatorpb.FindMaximumResponse{
+				Max: max,
+			}); err != nil {
+				log.Fatalf("error while sending data to client: %v", err)
+				return err
+			}
+		}
+	}
 }
 
 func (s *server) ComputeAverage(stream calculatorpb.CalculationService_ComputeAverageServer) error {
