@@ -29,7 +29,7 @@ message ComputeAverageRequest{
 }
 
 message ComputeAverageResponse{
-    int32 result = 1;
+    double result = 1;
 }
 
 service CalculationService {

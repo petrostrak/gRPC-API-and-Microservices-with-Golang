@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"gRPC-API-and-Microservices-with-Golang/calculator/calculatorpb"
+	"io"
 	"log"
 	"net"
 
@@ -13,8 +14,21 @@ import (
 type server struct{}
 
 func (s *server) ComputeAverage(stream calculatorpb.CalculationService_ComputeAverageServer) error {
-	// TODO: implement ComputeAverage func
-	return nil
+	fmt.Println("Compute Average request was invoked")
+	var result float64
+	for {
+		req, err := stream.Recv()
+		if err == io.EOF {
+			return stream.SendAndClose(&calculatorpb.ComputeAverageResponse{
+				Result: result,
+			})
+		}
+		if err != nil {
+			log.Fatalf("error while reading stream: %v", err)
+		}
+		number := req.GetCalculation().GetA()
+		result += float64(number) / float64(req.XXX_Size())
+	}
 }
 
 func (s *server) PrimeNumberDecomposition(req *calculatorpb.PrimeNumberDecompositionRequest, stream calculatorpb.CalculationService_PrimeNumberDecompositionServer) error {
