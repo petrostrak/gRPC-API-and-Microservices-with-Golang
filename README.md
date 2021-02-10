@@ -132,6 +132,41 @@ protoc calculator/calculatorpb/calculator.proto --go_out=plugins=grpc:.
 - `https://avi.im/grpc-errors/`
 - `https://grpc.io/docs/guides/error/`
 
+### What is gRPC Deadlines?
+- Deadlines allow gRPC clients to specify how long they are willing to wait for an RPC to complete before the RPC is returned with the error DEADLINE_EXCEEDED.
+- The gRPC documentation recommends you set a deadline for all client RPC calls.
+- The server should check if the deadling has exceeded and calcel the work it is doing.
+- Deadlines are propagated across if gRPC calls are chained. 
+   * A => B => C  (Deadline for A is passed to B and then passed to C)
+- More info: `https://grpc.io/blog/deadlines/`
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
