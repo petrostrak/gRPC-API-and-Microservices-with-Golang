@@ -119,10 +119,8 @@
 - gRPC is API oriented, instead of Resource Oriented like REST.
 
 ### Dependencies Setup
- ```
- go get -u google.golang.org/grpc`
- go install google.golang.org/protobuf/cmd/protoc-gen-go
- ```
+- `go get -u google.golang.org/grpc`
+- `go install google.golang.org/protobuf/cmd/protoc-gen-go`
 
 ### Generate Go code through `.proto` file
 ```
@@ -130,6 +128,9 @@ protoc greet/greetpb/greet.proto --go_out=plugins=grpc:.
 protoc calculator/calculatorpb/calculator.proto --go_out=plugins=grpc:.
 ```
 
+### gRPC Error Handling
+- `https://avi.im/grpc-errors/`
+- `https://grpc.io/docs/guides/error/`
 
 
 
