@@ -146,6 +146,14 @@ protoc calculator/calculatorpb/calculator.proto --go_out=plugins=grpc:.
 - SSL allows communication to be secure end-to-end and ensuring no Man in the middle attack can be performed.
 ![alt text](https://i.ibb.co/127Yvzg/gRPCencr.png)
 
+#### Hands on SSL Encryption in gRPC with Go
+- Setup a certificate authority.
+- Setup a server certificate.
+   * Setup the server to use TLS.
+- Sign a server certificate.
+   * Setup the client to connect securely over TLS.
+- More info: `https://grpc.io/docs/guides/auth/`
+
 #### How SSL works
 - When you communicate over the internet, your data is visible by all the servers that transfer your packet.
 - Any router in the middle can view the packets you're sending using PLAINTEXT.
