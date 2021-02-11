@@ -162,7 +162,11 @@ protoc calculator/calculatorpb/calculator.proto --go_out=plugins=grpc:.
 - SSL allows clients and servers to encrypt packets.
 ![alt text](https://i.ibb.co/dPwZpyY/https.png)
 
-
+### gRPC Reflection & CLI
+- For development, when you have a gRPC server you don't know, you need to know `what APIs does that server have`.
+- With Reflection we can
+   * expose which endpoints are available
+   * allow `command line interfaces` (CLI) to talk to our server without having a preliminary `.proto` file.
 
 
 
