@@ -165,16 +165,21 @@ protoc calculator/calculatorpb/calculator.proto --go_out=plugins=grpc:.
 ### gRPC Reflection & CLI
 - For development, when you have a gRPC server you don't know, you need to know `what APIs does that server have`.
 - With Reflection we can
-   * expose which endpoints are available
+   * expose which endpoints are available.
    * allow `command line interfaces` (CLI) to talk to our server without having a preliminary `.proto` file.
 
-
-
-
-
-
-
-
+#### To install Evans
+- `go get github.com/ktr0731/evans`
+- `evans -p 50051 -r`
+- In evans cli:
+   * To show the services `show service`
+   * To show the messages `show message`
+   * To get the description of a message `desc msgName`
+- To call the services from the command line
+   * First choose the package to work with `show package` and then `package default`
+   * To call a service type `show service` and then to choose from `service CalculatorService`
+   * To call an rpc for example `call Sum`
+   
 
 
 
