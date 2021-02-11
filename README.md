@@ -140,10 +140,19 @@ protoc calculator/calculatorpb/calculator.proto --go_out=plugins=grpc:.
    * A => B => C  (Deadline for A is passed to B and then passed to C)
 - More info: `https://grpc.io/blog/deadlines/`
 
+### SSL Encryption in gRPC
+- In production, gRPC calls should be running with encryption enabled.
+- This is done by generating SSL certificates.
+- SSL allows communication to be secure end-to-end and ensuring no Man in the middle attack can be performed.
+![alt text](https://i.ibb.co/127Yvzg/gRPCencr.png)
 
+#### How SSL works
+- When you communicate over the internet, your data is visible by all the servers that transfer your packet.
+- Any router in the middle can view the packets you're sending using PLAINTEXT.
+![alt text](https://i.ibb.co/3NssRWC/http.png)
 
-
-
+- SSL allows clients and servers to encrypt packets.
+![alt text](https://i.ibb.co/dPwZpyY/https.png)
 
 
 
