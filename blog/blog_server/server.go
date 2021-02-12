@@ -4,20 +4,64 @@ import (
 	"context"
 	"fmt"
 	"gRPC-API-and-Microservices-with-Golang/blog/blogpb"
+	"gRPC-API-and-Microservices-with-Golang/blog/db"
 	"log"
 	"net"
 	"os"
 	"os/signal"
 	"time"
 
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 )
 
 var collection *mongo.Collection
 
 type server struct{}
+
+func (s *server) CreateBlog(ctx context.Context, req *blogpb.CreateBlogRequest) (*blogpb.CreateBlogResponse, error) {
+	// parse data from request
+	blog := req.GetBlog()
+
+	// map them to mongoDB
+	data := db.BlogItem{
+		AuthorID: blog.GetAuthorId(),
+		Content:  blog.GetContent(),
+		Title:    blog.Title,
+	}
+
+	// pass the data to the DB
+	res, err := collection.InsertOne(context.Background(), data)
+	if err != nil {
+		return nil, status.Errorf(
+			codes.Internal,
+			fmt.Sprintf("internal error: %v", err),
+		)
+	}
+
+	// creating an ID
+	objId, ok := res.InsertedID.(primitive.ObjectID)
+	if !ok {
+		return nil, status.Errorf(
+			codes.Internal,
+			fmt.Sprintln("cannot convert to ObjectId"),
+		)
+	}
+
+	// returns the data
+	return &blogpb.CreateBlogResponse{
+		Blog: &blogpb.Blog{
+			Id:       objId.Hex(),
+			AuthorId: blog.GetAuthorId(),
+			Content:  blog.GetContent(),
+			Title:    blog.Title,
+		},
+	}, nil
+}
 
 func main() {
 	// if the code crushes, we get the file name and line number
@@ -35,6 +79,7 @@ func main() {
 		if err = client.Disconnect(ctx); err != nil {
 			panic(err)
 		}
+		fmt.Println("Closing DB connetion")
 	}()
 
 	collection = client.Database("gRPC").Collection("blog")
