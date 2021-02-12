@@ -5,6 +5,8 @@ import (
 	"gRPC-API-and-Microservices-with-Golang/blog/blogpb"
 	"log"
 	"net"
+	"os"
+	"os/signal"
 
 	"google.golang.org/grpc"
 )
@@ -12,6 +14,10 @@ import (
 type server struct{}
 
 func main() {
+	// if the code crushes, we get the file name and line number
+	// of the error
+	log.SetFlags(log.LstdFlags | log.Lshortfile)
+
 	fmt.Println("Blog Service Started")
 
 	lis, err := net.Listen("tcp", "0.0.0.0:50051")
@@ -24,8 +30,23 @@ func main() {
 	s := grpc.NewServer(options...)
 	blogpb.RegisterBlogServiceServer(s, &server{})
 
-	if err := s.Serve(lis); err != nil {
-		log.Fatalf("failed to server: %v", err)
-		return
-	}
+	go func() {
+		fmt.Println("Starting Server...")
+		if err := s.Serve(lis); err != nil {
+			log.Fatalf("failed to server: %v", err)
+			return
+		}
+	}()
+
+	// wait foc Control+C to exit
+	ch := make(chan os.Signal, 1)
+	signal.Notify(ch, os.Interrupt)
+
+	// block until a signal is received
+	<-ch
+	fmt.Println("Stopping the server")
+	s.Stop()
+	fmt.Println("Closing the listener")
+	lis.Close()
+	fmt.Println("End of program..")
 }
