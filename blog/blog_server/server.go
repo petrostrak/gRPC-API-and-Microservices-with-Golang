@@ -1,15 +1,21 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"gRPC-API-and-Microservices-with-Golang/blog/blogpb"
 	"log"
 	"net"
 	"os"
 	"os/signal"
+	"time"
 
+	"go.mongodb.org/mongo-driver/mongo"
+	"go.mongodb.org/mongo-driver/mongo/options"
 	"google.golang.org/grpc"
 )
+
+var collection *mongo.Collection
 
 type server struct{}
 
@@ -18,7 +24,20 @@ func main() {
 	// of the error
 	log.SetFlags(log.LstdFlags | log.Lshortfile)
 
-	fmt.Println("Blog Service Started")
+	fmt.Println("Connecting to mongoDB")
+	// open a new client to mongoDB
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+	client, err := mongo.Connect(ctx, options.Client().ApplyURI("mongodb://localhost:27017"))
+
+	// defer a call to Disconnect from mongoDB
+	defer func() {
+		if err = client.Disconnect(ctx); err != nil {
+			panic(err)
+		}
+	}()
+
+	collection = client.Database("gRPC").Collection("blog")
 
 	lis, err := net.Listen("tcp", "0.0.0.0:50051")
 	if err != nil {
