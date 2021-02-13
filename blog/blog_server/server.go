@@ -11,6 +11,7 @@ import (
 	"os/signal"
 	"time"
 
+	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
@@ -59,6 +60,40 @@ func (s *server) CreateBlog(ctx context.Context, req *blogpb.CreateBlogRequest) 
 			AuthorId: blog.GetAuthorId(),
 			Content:  blog.GetContent(),
 			Title:    blog.GetTitle(),
+		},
+	}, nil
+}
+
+func (s *server) ReadBlog(ctx context.Context, req *blogpb.ReadBlogRequest) (*blogpb.ReadBlogResponse, error) {
+	blogId := req.GetBlogId()
+
+	// convert to object id
+	objId, err := primitive.ObjectIDFromHex(blogId)
+	if err != nil {
+		return nil, status.Errorf(
+			codes.InvalidArgument,
+			fmt.Sprintln("cannot parse ID"),
+		)
+	}
+
+	// create empty struct
+	data := &db.BlogItem{}
+	filter := bson.M{"_id": objId}
+
+	res := collection.FindOne(context.Background(), filter)
+	if err := res.Decode(data); err != nil {
+		return nil, status.Errorf(
+			codes.NotFound,
+			fmt.Sprintf("cannot find blog with specified ID %v", err),
+		)
+	}
+
+	return &blogpb.ReadBlogResponse{
+		Blog: &blogpb.Blog{
+			Id:       data.ID.Hex(),
+			AuthorId: data.AuthorID,
+			Content:  data.Content,
+			Title:    data.Title,
 		},
 	}, nil
 }
