@@ -45,4 +45,19 @@ func main() {
 		fmt.Printf("error while reading: %v\n", err)
 	}
 	fmt.Printf("Blog was read: %v\n", res)
+
+	// update Blog
+	newBlog := &blogpb.Blog{
+		Id:       blogID,
+		AuthorId: "Greg the second",
+		Content:  "This is gRPC Unary call for testing the UpdateBlogRequest!",
+		Title:    "Greg's updated Blog",
+	}
+
+	resUp, err := c.UpdateBlog(context.Background(), &blogpb.UpdateBlogRequest{Blog: newBlog})
+	if err != nil {
+		fmt.Printf("error while updating %v", err)
+	}
+
+	fmt.Printf("Blog was read: %v", resUp)
 }
