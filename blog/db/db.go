@@ -1,8 +1,6 @@
 package db
 
-import (
-	"go.mongodb.org/mongo-driver/bson/primitive"
-)
+import "go.mongodb.org/mongo-driver/bson/primitive"
 
 // BlogItem maps the mongodb table
 type BlogItem struct {

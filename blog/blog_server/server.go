@@ -31,7 +31,7 @@ func (s *server) CreateBlog(ctx context.Context, req *blogpb.CreateBlogRequest) 
 	data := db.BlogItem{
 		AuthorID: blog.GetAuthorId(),
 		Content:  blog.GetContent(),
-		Title:    blog.Title,
+		Title:    blog.GetTitle(),
 	}
 
 	// pass the data to the DB
@@ -44,7 +44,7 @@ func (s *server) CreateBlog(ctx context.Context, req *blogpb.CreateBlogRequest) 
 	}
 
 	// creating an ID
-	objId, ok := res.InsertedID.(primitive.ObjectID)
+	objID, ok := res.InsertedID.(primitive.ObjectID)
 	if !ok {
 		return nil, status.Errorf(
 			codes.Internal,
@@ -55,10 +55,10 @@ func (s *server) CreateBlog(ctx context.Context, req *blogpb.CreateBlogRequest) 
 	// returns the data
 	return &blogpb.CreateBlogResponse{
 		Blog: &blogpb.Blog{
-			Id:       objId.Hex(),
+			Id:       objID.Hex(),
 			AuthorId: blog.GetAuthorId(),
 			Content:  blog.GetContent(),
-			Title:    blog.Title,
+			Title:    blog.GetTitle(),
 		},
 	}, nil
 }
@@ -70,17 +70,16 @@ func main() {
 
 	fmt.Println("Connecting to mongoDB")
 	// open a new client to mongoDB
-	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
-	defer cancel()
-	client, err := mongo.Connect(ctx, options.Client().ApplyURI("mongodb://localhost:27017"))
-
-	// defer a call to Disconnect from mongoDB
-	defer func() {
-		if err = client.Disconnect(ctx); err != nil {
-			panic(err)
-		}
-		fmt.Println("Closing DB connetion")
-	}()
+	client, err := mongo.NewClient(options.Client().ApplyURI("mongodb://localhost:27017"))
+	if err != nil {
+		log.Fatal(err)
+	}
+	ctx, _ := context.WithTimeout(context.Background(), 10*time.Second)
+	err = client.Connect(ctx)
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer client.Disconnect(ctx)
 
 	collection = client.Database("gRPC").Collection("blog")
 
