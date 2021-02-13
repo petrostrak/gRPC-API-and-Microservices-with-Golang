@@ -25,16 +25,16 @@ func main() {
 	// create new Blog
 	fmt.Println("Creating blog")
 	blog := &blogpb.Blog{
-		AuthorId: "Petros",
-		Content:  "This is gRPC Unary call for creating a Blog!",
-		Title:    "My first Blog",
+		AuthorId: "Greg",
+		Content:  "This is gRPC Unary call for testing the ReadBlogRequest!",
+		Title:    "Greg's Blog",
 	}
 	fmt.Println("Blog created")
 	cb, err := c.CreateBlog(context.Background(), &blogpb.CreateBlogRequest{Blog: blog})
 	if err != nil {
 		log.Fatalf("unexpected error: %v\n", err)
 	}
-	fmt.Printf("Blog has been created: %v\n", cb)
+	fmt.Printf("Blog has been created: %v\n", cb.GetBlog().Id)
 
 	// extract blogid from create blog response
 	blogID := cb.GetBlog().GetId()
