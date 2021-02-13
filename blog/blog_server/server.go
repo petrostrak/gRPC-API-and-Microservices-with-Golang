@@ -25,6 +25,7 @@ var collection *mongo.Collection
 type server struct{}
 
 func (s *server) CreateBlog(ctx context.Context, req *blogpb.CreateBlogRequest) (*blogpb.CreateBlogResponse, error) {
+	fmt.Println("Create blog request")
 	// parse data from request
 	blog := req.GetBlog()
 
@@ -65,6 +66,7 @@ func (s *server) CreateBlog(ctx context.Context, req *blogpb.CreateBlogRequest) 
 }
 
 func (s *server) ReadBlog(ctx context.Context, req *blogpb.ReadBlogRequest) (*blogpb.ReadBlogResponse, error) {
+	fmt.Println("Read blog request")
 	blogId := req.GetBlogId()
 
 	// convert to object id
@@ -99,6 +101,7 @@ func (s *server) ReadBlog(ctx context.Context, req *blogpb.ReadBlogRequest) (*bl
 }
 
 func (s *server) UpdateBlog(ctx context.Context, req *blogpb.UpdateBlogRequest) (*blogpb.UpdateBlogResponse, error) {
+	fmt.Println("Update blog request")
 	// parse the object
 	blog := req.GetBlog()
 	objID, err := primitive.ObjectIDFromHex(blog.GetId())
@@ -147,6 +150,36 @@ func dataToBlogPb(data *db.BlogItem) *blogpb.Blog {
 		Content:  data.Content,
 		Title:    data.Title,
 	}
+}
+
+func (s *server) DeleteBlog(ctx context.Context, req *blogpb.DeleteBlogRequest) (*blogpb.DeleteBlogResponse, error) {
+	fmt.Println("Delete blog request")
+
+	objID, err := primitive.ObjectIDFromHex(req.GetBlogId())
+	if err != nil {
+		return nil, status.Errorf(
+			codes.InvalidArgument,
+			fmt.Sprintf("cannot parse object id %v", err),
+		)
+	}
+
+	filter := bson.M{"_id": objID}
+	res, err := collection.DeleteOne(context.Background(), filter)
+	if err != nil {
+		return nil, status.Errorf(
+			codes.Internal,
+			fmt.Sprintf("cannot delete object: %v", err),
+		)
+	}
+
+	if res.DeletedCount == 0 {
+		return nil, status.Errorf(
+			codes.NotFound,
+			fmt.Sprintf("cannot found blog by given id: %v", err),
+		)
+	}
+
+	return &blogpb.DeleteBlogResponse{Message: req.GetBlogId()}, nil
 }
 
 func main() {
