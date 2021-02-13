@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"gRPC-API-and-Microservices-with-Golang/blog/blogpb"
+	"io"
 	"log"
 
 	"google.golang.org/grpc"
@@ -68,4 +69,20 @@ func main() {
 	}
 
 	fmt.Printf("Blog deleted %v", resDel)
+
+	// list blog
+	stream, err := c.ListBlog(context.Background(), &blogpb.ListBlogRequest{})
+	if err != nil {
+		fmt.Printf("error while calling ListBlog %v", err)
+	}
+	for {
+		resL, err := stream.Recv()
+		if err == io.EOF {
+			break
+		}
+		if err != nil {
+			log.Fatalf("something occured: %v", err)
+		}
+		fmt.Println(resL.GetBlog())
+	}
 }
