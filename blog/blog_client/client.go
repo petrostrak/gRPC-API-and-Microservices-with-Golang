@@ -60,4 +60,12 @@ func main() {
 	}
 
 	fmt.Printf("Blog was read: %v", resUp)
+
+	// delete Blog
+	resDel, err := c.DeleteBlog(context.Background(), &blogpb.DeleteBlogRequest{BlogId: blogID})
+	if err != nil {
+		fmt.Printf("error while deleting %v", err)
+	}
+
+	fmt.Printf("Blog deleted %v", resDel)
 }
